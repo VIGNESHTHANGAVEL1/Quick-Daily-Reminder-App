@@ -1,0 +1,11 @@
+node_modules/
+.env
+*.log
+.DS_Store
+dist/
+build/
+.gradle/
+.watchman*
+android/app/debug/
+android/app/release/
+ios/Pods/

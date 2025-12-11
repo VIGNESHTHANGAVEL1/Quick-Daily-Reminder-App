@@ -1,0 +1,229 @@
+openapi: 3.0.0
+info:
+  title: Daily Reminder API
+  version: 1.0.0
+  description: RESTful API for managing daily reminders with notifications
+
+servers:
+  - url: http://localhost:5000/api
+    description: Development server
+
+components:
+  schemas:
+    Reminder:
+      type: object
+      required:
+        - title
+        - date
+        - time
+      properties:
+        _id:
+          type: string
+          description: MongoDB document ID
+        title:
+          type: string
+          description: Reminder title
+          example: "Team Meeting"
+        description:
+          type: string
+          description: Reminder description
+          example: "Discuss Q1 goals"
+        date:
+          type: string
+          format: date
+          description: Reminder date in YYYY-MM-DD format
+          example: "2025-12-15"
+        time:
+          type: string
+          description: Reminder time in HH:MM format
+          example: "10:00"
+        repeat:
+          type: string
+          enum: ['once', 'daily']
+          default: once
+          description: Whether reminder repeats daily or is one-time
+        status:
+          type: string
+          enum: ['active', 'completed', 'archived']
+          default: active
+          description: Current status of the reminder
+        created_at:
+          type: string
+          format: date-time
+          description: Creation timestamp
+        updated_at:
+          type: string
+          format: date-time
+          description: Last update timestamp
+
+    Notification:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Reminder ID
+        title:
+          type: string
+          description: Reminder title
+        description:
+          type: string
+          description: Reminder description
+        time:
+          type: string
+          format: date-time
+          description: When notification was triggered
+        type:
+          type: string
+          enum: ['reminder']
+          description: Notification type
+
+paths:
+  /reminders:
+    get:
+      summary: Get all reminders
+      tags: [Reminders]
+      responses:
+        '200':
+          description: List of all reminders
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Reminder'
+
+    post:
+      summary: Create a new reminder
+      tags: [Reminders]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [title, date, time]
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                date:
+                  type: string
+                  format: date
+                time:
+                  type: string
+                repeat:
+                  type: string
+                  enum: ['once', 'daily']
+      responses:
+        '201':
+          description: Reminder created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reminder'
+        '400':
+          description: Invalid input
+
+  /reminders/{id}:
+    get:
+      summary: Get a specific reminder
+      tags: [Reminders]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Reminder details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reminder'
+        '404':
+          description: Reminder not found
+
+    patch:
+      summary: Update a reminder
+      tags: [Reminders]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                date:
+                  type: string
+                  format: date
+                time:
+                  type: string
+                repeat:
+                  type: string
+                status:
+                  type: string
+      responses:
+        '200':
+          description: Reminder updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reminder'
+        '404':
+          description: Reminder not found
+
+    delete:
+      summary: Delete a reminder
+      tags: [Reminders]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Reminder deleted
+        '404':
+          description: Reminder not found
+
+  /notifications:
+    get:
+      summary: Get pending notifications (and clear them)
+      tags: [Notifications]
+      responses:
+        '200':
+          description: List of pending notifications
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Notification'
+
+  /health:
+    get:
+      summary: Health check
+      tags: [Health]
+      responses:
+        '200':
+          description: Server is running
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
