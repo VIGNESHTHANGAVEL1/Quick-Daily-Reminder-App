@@ -58,6 +58,8 @@ A complete daily reminder application with **Node.js/Express backend**, **React 
      - Android SDK Platform-Tools are installed
      - Android Virtual Device (AVD) is configured
    - Set environment variables:
+     
+     **macOS/Linux:**
      ```bash
      export ANDROID_HOME=$HOME/Library/Android/sdk
      export PATH=$PATH:$ANDROID_HOME/emulator
@@ -65,13 +67,33 @@ A complete daily reminder application with **Node.js/Express backend**, **React 
      export PATH=$PATH:$ANDROID_HOME/tools
      export PATH=$PATH:$ANDROID_HOME/tools/bin
      ```
-   - Add to `~/.bashrc` or `~/.zshrc` for persistence
+     - Add to `~/.bashrc` or `~/.zshrc` for persistence
+     
+     **Windows:**
+     - Open System Properties → Environment Variables
+     - Add new System Variable:
+       - Variable name: `ANDROID_HOME`
+       - Variable value: `C:\Users\<YourUsername>\AppData\Local\Android\Sdk`
+     - Edit `Path` variable, add these entries:
+       - `%ANDROID_HOME%\emulator`
+       - `%ANDROID_HOME%\platform-tools`
+       - `%ANDROID_HOME%\tools`
+       - `%ANDROID_HOME%\tools\bin`
+     - Verify in Command Prompt:
+       ```cmd
+       echo %ANDROID_HOME%
+       adb version
+       ```
 
 3. **Android Emulator**
    - Create an AVD through Android Studio
    - Recommended: API Level 30+ (Android 11+)
 
-### For iOS Development (macOS only)
+### For iOS Development
+
+**Note:** iOS development requires macOS. Windows users can develop for Android only, or use a Mac for iOS development.
+
+#### macOS Setup
 
 1. **Xcode**
    - Version: Xcode 14+ (recommended: Latest version)
@@ -101,13 +123,24 @@ A complete daily reminder application with **Node.js/Express backend**, **React 
      xcodebuild -downloadPlatform iOS
      ```
 
+#### Windows Users
+
+- **iOS development is not possible on Windows**
+- Use macOS (physical Mac or macOS virtual machine) for iOS development
+- Alternative: Use cloud-based Mac services (MacStadium, AWS Mac instances) for iOS builds
+- For local development, focus on Android and Web platforms
+
 ### React Native CLI (for Mobile)
 
+**macOS/Linux/Windows:**
 ```bash
 npm install -g react-native-cli
 ```
 
-Or use npx (recommended, no global install needed).
+Or use npx (recommended, no global install needed):
+```bash
+npx react-native --version
+```
 
 ## 📦 Installation
 
@@ -172,14 +205,40 @@ cd ..
 Before running, ensure:
 
 1. **MongoDB is running:**
+   
+   **macOS/Linux:**
    ```bash
    mongod
    ```
-   Or start MongoDB as a service (varies by OS).
+   Or start as a service:
+   ```bash
+   # macOS (Homebrew)
+   brew services start mongodb-community
+   
+   # Linux (systemd)
+   sudo systemctl start mongod
+   ```
+   
+   **Windows:**
+   ```cmd
+   # Start MongoDB service
+   net start MongoDB
+   ```
+   Or run directly:
+   ```cmd
+   "C:\Program Files\MongoDB\Server\<version>\bin\mongod.exe"
+   ```
+   Or start MongoDB as a Windows service:
+   - Open Services (services.msc)
+   - Find "MongoDB" service
+   - Right-click → Start
 
 2. **Backend is accessible:**
    - Default: `http://localhost:5001`
-   - Verify: `curl http://localhost:5001/api/health`
+   - Verify:
+     - **macOS/Linux:** `curl http://localhost:5001/api/health`
+     - **Windows (PowerShell):** `Invoke-RestMethod -Uri http://localhost:5001/api/health`
+     - **Windows (Browser):** Open `http://localhost:5001/api/health` in browser
 
 ### Option 1: Run All Platforms Simultaneously
 
@@ -230,10 +289,27 @@ Metro waiting on port 8081
 
 #### Terminal 4: Android App
 
+**macOS/Linux:**
 ```bash
 cd mobile
 export ANDROID_HOME=~/Library/Android/sdk
 export PATH=$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/platform-tools
+npm run android
+```
+
+**Windows (Command Prompt or PowerShell):**
+```cmd
+cd mobile
+set ANDROID_HOME=%LOCALAPPDATA%\Android\Sdk
+set PATH=%PATH%;%ANDROID_HOME%\emulator;%ANDROID_HOME%\platform-tools
+npm run android
+```
+
+**Windows (PowerShell):**
+```powershell
+cd mobile
+$env:ANDROID_HOME="$env:LOCALAPPDATA\Android\Sdk"
+$env:PATH="$env:PATH;$env:ANDROID_HOME\emulator;$env:ANDROID_HOME\platform-tools"
 npm run android
 ```
 
@@ -305,6 +381,7 @@ Web app available at: `http://localhost:5173`
 
 You can also run all services in the background:
 
+**macOS/Linux:**
 ```bash
 # Backend
 cd backend && npm start > /tmp/backend.log 2>&1 &
@@ -318,17 +395,47 @@ cd mobile && npm start > /tmp/metro.log 2>&1 &
 # Android
 cd mobile && npm run android > /tmp/android.log 2>&1 &
 
-# iOS
+# iOS (macOS only)
 cd mobile && npm run ios > /tmp/ios.log 2>&1 &
 ```
 
-Monitor logs:
+Monitor logs (macOS/Linux):
 ```bash
 tail -f /tmp/backend.log
 tail -f /tmp/web.log
 tail -f /tmp/metro.log
 tail -f /tmp/android.log
 tail -f /tmp/ios.log
+```
+
+**Windows (PowerShell):**
+```powershell
+# Backend
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd backend; npm start" -WindowStyle Minimized
+
+# Web
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd web; npm run dev" -WindowStyle Minimized
+
+# Metro
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd mobile; npm start" -WindowStyle Minimized
+
+# Android
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd mobile; npm run android" -WindowStyle Minimized
+```
+
+**Windows (Command Prompt):**
+```cmd
+REM Backend
+start "Backend" cmd /k "cd backend && npm start"
+
+REM Web
+start "Web" cmd /k "cd web && npm run dev"
+
+REM Metro
+start "Metro" cmd /k "cd mobile && npm start"
+
+REM Android
+start "Android" cmd /k "cd mobile && npm run android"
 ```
 
 ## 📁 Project Structure
@@ -384,6 +491,7 @@ reminder-app/
 
 ### Example: Create Reminder
 
+**macOS/Linux:**
 ```bash
 curl -X POST http://localhost:5001/api/reminders \
   -H "Content-Type: application/json" \
@@ -394,6 +502,24 @@ curl -X POST http://localhost:5001/api/reminders \
     "time": "10:00",
     "repeat": "once"
   }'
+```
+
+**Windows (PowerShell):**
+```powershell
+$body = @{
+    title = "Team Meeting"
+    description = "Discuss Q1 goals"
+    date = "2025-12-15"
+    time = "10:00"
+    repeat = "once"
+} | ConvertTo-Json
+
+Invoke-RestMethod -Uri http://localhost:5001/api/reminders -Method Post -Body $body -ContentType "application/json"
+```
+
+**Windows (Command Prompt - if curl is available):**
+```cmd
+curl -X POST http://localhost:5001/api/reminders -H "Content-Type: application/json" -d "{\"title\":\"Team Meeting\",\"description\":\"Discuss Q1 goals\",\"date\":\"2025-12-15\",\"time\":\"10:00\",\"repeat\":\"once\"}"
 ```
 
 ## ⚙️ Configuration
@@ -492,13 +618,27 @@ const API_URL = 'http://192.168.1.100:5001/api'; // Replace with your IP
    mongod
    ```
 2. Check MongoDB service:
-   ```bash
-   # macOS
-   brew services list
    
-   # Linux
+   **macOS:**
+   ```bash
+   brew services list
+   ```
+   
+   **Linux:**
+   ```bash
    sudo systemctl status mongod
    ```
+   
+   **Windows:**
+   ```cmd
+   # Check if MongoDB service is running
+   sc query MongoDB
+   
+   # Or check in Services
+   services.msc
+   # Look for "MongoDB" service
+   ```
+   
 3. Verify connection string in `backend/.env`
 
 ### Port Already in Use
@@ -507,15 +647,38 @@ const API_URL = 'http://192.168.1.100:5001/api'; // Replace with your IP
 
 **Solution:**
 1. Find process using the port:
+   
+   **macOS/Linux:**
    ```bash
    lsof -ti:5001  # Backend
    lsof -ti:5173  # Web
    lsof -ti:8081  # Metro
    ```
+   
+   **Windows:**
+   ```cmd
+   netstat -ano | findstr :5001  # Backend
+   netstat -ano | findstr :5173  # Web
+   netstat -ano | findstr :8081  # Metro
+   ```
+   Note the PID (Process ID) from the last column.
+
 2. Kill the process:
+   
+   **macOS/Linux:**
    ```bash
    kill -9 <PID>
    ```
+   
+   **Windows:**
+   ```cmd
+   taskkill /PID <PID> /F
+   ```
+   Or use Task Manager:
+   - Open Task Manager (Ctrl+Shift+Esc)
+   - Go to Details tab
+   - Find process by PID and End Task
+
 3. Or change port in `.env` (backend) or `vite.config.js` (web)
 
 ### CORS Errors
@@ -533,21 +696,42 @@ const API_URL = 'http://192.168.1.100:5001/api'; // Replace with your IP
 
 **Solutions:**
 1. **SSL Certificate Error:**
+   
+   **macOS/Linux:**
    ```bash
    # Import certificate (if needed)
    sudo keytool -import -alias maven -file <certificate> \
      -keystore $JAVA_HOME/lib/security/cacerts \
      -storepass changeit
    ```
+   
+   **Windows:**
+   ```cmd
+   REM Import certificate (if needed)
+   keytool -import -alias maven -file <certificate> ^
+     -keystore "%JAVA_HOME%\lib\security\cacerts" ^
+     -storepass changeit
+   ```
+   Note: Run Command Prompt as Administrator
 
 2. **Gradle Version Mismatch:**
    - Check `android/gradle/wrapper/gradle-wrapper.properties`
    - React Native 0.71.3 requires Gradle 7.5.1
 
 3. **Clean Build:**
+   
+   **macOS/Linux:**
    ```bash
    cd android
    ./gradlew clean
+   cd ..
+   npm run android
+   ```
+   
+   **Windows:**
+   ```cmd
+   cd android
+   gradlew.bat clean
    cd ..
    npm run android
    ```
@@ -599,8 +783,22 @@ const API_URL = 'http://192.168.1.100:5001/api'; // Replace with your IP
    ```
 
 3. Clear node modules:
+   
+   **macOS/Linux:**
    ```bash
    rm -rf node_modules
+   npm install --legacy-peer-deps
+   ```
+   
+   **Windows:**
+   ```cmd
+   rmdir /s /q node_modules
+   npm install --legacy-peer-deps
+   ```
+   
+   **Windows (PowerShell):**
+   ```powershell
+   Remove-Item -Recurse -Force node_modules
    npm install --legacy-peer-deps
    ```
 
@@ -615,8 +813,22 @@ const API_URL = 'http://192.168.1.100:5001/api'; // Replace with your IP
    ```
 
 2. Reinstall dependencies:
+   
+   **macOS/Linux:**
    ```bash
    rm -rf node_modules
+   npm install --legacy-peer-deps
+   ```
+   
+   **Windows:**
+   ```cmd
+   rmdir /s /q node_modules
+   npm install --legacy-peer-deps
+   ```
+   
+   **Windows (PowerShell):**
+   ```powershell
+   Remove-Item -Recurse -Force node_modules
    npm install --legacy-peer-deps
    ```
 
@@ -639,7 +851,10 @@ const API_URL = 'http://192.168.1.100:5001/api'; // Replace with your IP
 
 **Solutions:**
 1. Check Metro bundler is running
-2. Reload app: Press `⌘R` (iOS) or `R+R` (Android)
+2. Reload app:
+   - **iOS Simulator:** Press `⌘R` (macOS) or `Ctrl+R` (Windows with simulator)
+   - **Android Emulator:** Press `R+R` (double tap R) or shake device → Reload
+   - **Web:** Press `F5` or `Ctrl+R` (Windows) / `⌘R` (macOS)
 3. Check browser console (web) or Metro logs (mobile)
 4. Verify backend is running and accessible
 
@@ -692,6 +907,7 @@ const API_URL = 'http://192.168.1.100:5001/api'; // Replace with your IP
 
 ### Test Backend API
 
+**macOS/Linux:**
 ```bash
 # Health check
 curl http://localhost:5001/api/health
@@ -711,6 +927,36 @@ curl -X POST http://localhost:5001/api/reminders \
 
 # Get notifications
 curl http://localhost:5001/api/notifications
+```
+
+**Windows (PowerShell):**
+```powershell
+# Health check
+Invoke-RestMethod -Uri http://localhost:5001/api/health
+
+# Get all reminders
+Invoke-RestMethod -Uri http://localhost:5001/api/reminders
+
+# Create reminder
+$body = @{
+    title = "Test Reminder"
+    date = "2025-12-15"
+    time = "10:00"
+    repeat = "once"
+} | ConvertTo-Json
+
+Invoke-RestMethod -Uri http://localhost:5001/api/reminders -Method Post -Body $body -ContentType "application/json"
+
+# Get notifications
+Invoke-RestMethod -Uri http://localhost:5001/api/notifications
+```
+
+**Windows (Command Prompt with curl):**
+```cmd
+REM If curl is installed (Windows 10+)
+curl http://localhost:5001/api/health
+
+REM Or use PowerShell commands above
 ```
 
 ### Test Web App
@@ -748,3 +994,37 @@ For issues or questions:
 - **MongoDB:** Ensure MongoDB is running before starting backend
 - **First Build:** iOS and Android first builds may take 5-10 minutes
 - **Metro Bundler:** Must be running for mobile apps to work
+- **Platform Support:**
+  - **Web:** Works on macOS, Windows, and Linux
+  - **Android:** Works on macOS, Windows, and Linux
+  - **iOS:** macOS only (requires Xcode)
+
+## 🪟 Windows-Specific Notes
+
+### Command Differences
+
+| Task | macOS/Linux | Windows |
+|------|-------------|---------|
+| Environment Variables | `export VAR=value` | `set VAR=value` (CMD) or `$env:VAR="value"` (PowerShell) |
+| Path Separator | `/` | `\` |
+| Kill Process | `kill -9 <PID>` | `taskkill /PID <PID> /F` |
+| Find Port Process | `lsof -ti:PORT` | `netstat -ano \| findstr :PORT` |
+| Remove Directory | `rm -rf dir` | `rmdir /s /q dir` (CMD) or `Remove-Item -Recurse -Force dir` (PowerShell) |
+| Background Process | `command &` | `start "Title" cmd /k "command"` (CMD) or `Start-Process` (PowerShell) |
+| Check Service | `brew services list` | `sc query ServiceName` or `services.msc` |
+
+### Windows Terminal Options
+
+- **Command Prompt (cmd.exe):** Traditional Windows terminal
+- **PowerShell:** More powerful, recommended for development
+- **Windows Terminal:** Modern terminal with tabs (recommended)
+- **Git Bash:** Unix-like commands on Windows (if Git for Windows is installed)
+
+### Android SDK Path on Windows
+
+Default location: `C:\Users\<YourUsername>\AppData\Local\Android\Sdk`
+
+Set environment variable:
+```cmd
+set ANDROID_HOME=C:\Users\<YourUsername>\AppData\Local\Android\Sdk
+```
