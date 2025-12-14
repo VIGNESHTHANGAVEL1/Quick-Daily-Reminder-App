@@ -1,0 +1,59 @@
+{
+  "project": {
+    "name": "{{PROJECT_NAME}}",
+    "displayName": "{{PROJECT_DISPLAY_NAME}}",
+    "description": "{{PROJECT_DESCRIPTION}}",
+    "version": "1.0.0",
+    "author": "{{AUTHOR_NAME}}",
+    "authorEmail": "{{AUTHOR_EMAIL}}"
+  },
+  "backend": {
+    "name": "{{PROJECT_NAME}}-backend",
+    "port": "{{BACKEND_PORT}}",
+    "mongodbUri": "mongodb://localhost:27017/{{DATABASE_NAME}}",
+    "databaseName": "{{DATABASE_NAME}}"
+  },
+  "web": {
+    "name": "{{PROJECT_NAME}}-web",
+    "port": "5173",
+    "title": "{{PROJECT_DISPLAY_NAME}}"
+  },
+  "mobile": {
+    "name": "{{PROJECT_NAME}}-mobile",
+    "packageName": "com.{{PACKAGE_NAME}}",
+    "appName": "{{APP_NAME}}",
+    "bundleId": "com.{{PACKAGE_NAME}}",
+    "displayName": "{{APP_DISPLAY_NAME}}"
+  },
+  "api": {
+    "basePath": "/api",
+    "modelName": "{{MODEL_NAME}}",
+    "modelNamePlural": "{{MODEL_NAME_PLURAL}}",
+    "routePrefix": "{{ROUTE_PREFIX}}"
+  },
+  "replacements": {
+    "PROJECT_NAME": "reminder-app",
+    "PROJECT_DISPLAY_NAME": "Daily Reminder App",
+    "PROJECT_DESCRIPTION": "A full-stack daily reminder application",
+    "AUTHOR_NAME": "Your Name",
+    "AUTHOR_EMAIL": "your.email@example.com",
+    "BACKEND_PORT": "5001",
+    "DATABASE_NAME": "reminderdb",
+    "PACKAGE_NAME": "reminderapp",
+    "APP_NAME": "ReminderApp",
+    "APP_DISPLAY_NAME": "Reminder App",
+    "MODEL_NAME": "Reminder",
+    "MODEL_NAME_PLURAL": "reminders",
+    "ROUTE_PREFIX": "reminders"
+  },
+  "instructions": {
+    "step1": "Copy this entire project directory",
+    "step2": "Run the setup script: ./setup-template.sh (macOS/Linux) or setup-template.bat (Windows)",
+    "step3": "Follow the prompts to customize your project",
+    "step4": "The script will replace all placeholders with your values",
+    "step5": "Update the template.config.json with your project details",
+    "step6": "Run npm install in backend, web, and mobile directories",
+    "step7": "Update Android package names and iOS bundle IDs manually if needed"
+  }
+}
+

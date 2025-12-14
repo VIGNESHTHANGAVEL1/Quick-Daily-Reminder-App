@@ -1,0 +1,43 @@
+# Files to ignore when using this as a template
+# These files are project-specific and should be regenerated
+
+# Build outputs
+**/build/
+**/dist/
+**/node_modules/
+**/.next/
+
+# Environment files (user should create their own)
+**/.env
+backend/.env
+
+# iOS build artifacts
+mobile/ios/build/
+mobile/ios/Pods/
+mobile/ios/*.xcworkspace/xcuserdata/
+mobile/ios/*.xcodeproj/xcuserdata/
+
+# Android build artifacts
+mobile/android/app/build/
+mobile/android/.gradle/
+mobile/android/local.properties
+
+# Logs
+*.log
+**/logs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Lock files (regenerate on install)
+package-lock.json
+yarn.lock
+Podfile.lock
+

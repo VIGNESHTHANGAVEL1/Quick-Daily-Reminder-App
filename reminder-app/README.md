@@ -4,6 +4,7 @@ A complete daily reminder application with **Node.js/Express backend**, **React 
 
 ## 📋 Table of Contents
 
+- [Using as a Template](#-using-as-a-template)
 - [Prerequisites](#-prerequisites)
 - [Installation](#-installation)
 - [Running the Application](#-running-the-application)
@@ -11,6 +12,46 @@ A complete daily reminder application with **Node.js/Express backend**, **React 
 - [API Endpoints](#-api-endpoints)
 - [Configuration](#-configuration)
 - [Troubleshooting](#-troubleshooting)
+
+## 📦 Using as a Template
+
+This project is designed to be **reusable as a template** for new full-stack projects.
+
+### Quick Start
+
+1. **Copy the project:**
+   ```bash
+   cp -r reminder-app my-new-project
+   cd my-new-project
+   ```
+
+2. **Run the setup script:**
+   ```bash
+   # macOS/Linux
+   ./setup-template.sh
+   
+   # Windows
+   setup-template.bat
+   ```
+
+3. **Follow the prompts** to customize your project
+
+4. **Install dependencies** and start coding!
+
+### Documentation
+
+- **[TEMPLATE_QUICK_START.md](TEMPLATE_QUICK_START.md)** - Quick 3-step guide
+- **[TEMPLATE_GUIDE.md](TEMPLATE_GUIDE.md)** - Complete template documentation
+- **[template.config.json](template.config.json)** - Configuration file
+
+The setup script will automatically:
+- ✅ Replace project names
+- ✅ Update package names
+- ✅ Configure ports and database
+- ✅ Update mobile app identifiers
+- ✅ Customize API routes
+
+See the template guides for detailed instructions and customization options.
 
 ## 🔧 Prerequisites
 
